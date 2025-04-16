@@ -8,5 +8,8 @@ public class Knights extends Piece{
         super(color, position);
     }
 
-
+    @Override
+    public boolean canMove(Position position) {
+        return false;
+    }
 }

@@ -1,10 +1,10 @@
 package com.example.Chess.pieces;
 
 import com.example.Chess.enums.Color;
+import com.example.Chess.moves.Move;
 
 
-public class Piece
-{
+public abstract class Piece implements Move {
     private Position position;
     private Color color;
 
@@ -12,6 +12,7 @@ public class Piece
         this.color = color;
         this.position = position;
     }
+
 
     public Color getColor() {
         return color;
