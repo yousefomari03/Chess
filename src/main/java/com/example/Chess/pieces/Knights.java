@@ -10,6 +10,7 @@ public class Knights extends Piece{
 
     @Override
     public boolean canMove(Position position) {
-        return false;
+        return (Math.abs(getPosition().getX()-position.getX()) ==1 && (Math.abs(getPosition().getY()-position.getY()))==2)
+                ||(Math.abs(getPosition().getX()-position.getX())==2 && Math.abs(getPosition().getY()-position.getY())==1);
     }
 }

@@ -13,6 +13,7 @@ public class Bishops extends Piece {
 
     @Override
     public boolean canMove(Position position) {
-        return false;
+        return Math.abs(getPosition().getX()-position.getX())==Math.abs(getPosition().getY()-position.getY())
+                && Math.abs(getPosition().getY()-position.getY())!=0;
     }
 }
