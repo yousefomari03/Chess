@@ -9,6 +9,7 @@ public class Queen extends Piece {
 
     @Override
     public boolean canMove(Position position) {
-        return false;
+
+        return (new Bishops(this.getPosition()).canMove(position)||new Rooks(this.getPosition()).canMove(position));
     }
 }

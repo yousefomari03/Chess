@@ -12,6 +12,9 @@ public abstract class Piece implements Move {
         this.color = color;
         this.position = position;
     }
+    public Piece(Position position) {
+        this.position = position;
+    }
 
 
     public Color getColor() {

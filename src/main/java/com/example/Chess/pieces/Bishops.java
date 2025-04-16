@@ -6,6 +6,9 @@ public class Bishops extends Piece {
     public Bishops(Color color, Position position) {
         super(color, position);
     }
+    public Bishops(Position position) {
+        super(position);
+    }
 
 
     @Override

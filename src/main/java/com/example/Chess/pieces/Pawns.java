@@ -10,6 +10,6 @@ public class Pawns extends Piece {
 
     @Override
     public boolean canMove(Position position) {
-        return false;
+        return  (position.getY() - this.getPosition().getY()) == 1 && (getPosition().getX()==position.getX());
     }
 }
