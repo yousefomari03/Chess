@@ -1,5 +1,6 @@
 package com.example.Chess.pieces;
 
+import com.example.Chess.board.Board;
 import com.example.Chess.enums.Color;
 
 public class King extends Piece {
@@ -9,7 +10,7 @@ public class King extends Piece {
 
 
     @Override
-    public boolean canMove(Position position) {
-        return false;
+    public boolean canMove(Position position, Board board) {
+        return ;
     }
 }

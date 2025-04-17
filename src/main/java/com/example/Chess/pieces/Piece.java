@@ -7,13 +7,15 @@ import com.example.Chess.moves.Move;
 public abstract class Piece implements Move {
     private Position position;
     private Color color;
-
+    private boolean moved;
     public Piece(Color color, Position position) {
         this.color = color;
         this.position = position;
+        this.moved= false;
     }
     public Piece(Position position) {
-        this.position = position;
+        this.position = position ;
+        this.moved=false;
     }
 
 
@@ -31,5 +33,14 @@ public abstract class Piece implements Move {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+
+    public boolean isMoved() {
+        return moved;
+    }
+
+    public void setMoved(boolean moved) {
+        this.moved = moved;
     }
 }
