@@ -7,12 +7,12 @@ public class Queen extends Piece {
     public Queen(Color color, Position position) {
         super(color, position);
     }
+    public Queen(Position position) {
+        super(position);
+    }
 
     @Override
     public boolean canMove(Position position, Board board) {
-
-        return (new Bishops(this.getPosition()).canMove(position, ) && (Math.abs(getPosition().getX()- position.getX())==1)
-                || new Rooks(this.getPosition()).canMove(position, ))&&(Math.abs(getPosition().getX()- position.getX()) + Math.abs(getPosition().getY()- position.getY()) == 1) ;
-
+        return (new Bishop(this.getPosition()).canMove(position, board) || new Rook(this.getPosition()).canMove(position, board));
     }
 }
