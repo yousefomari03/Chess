@@ -8,5 +8,9 @@ public class Knights extends Piece{
         super(color, position);
     }
 
-
+    @Override
+    public boolean canMove(Position position) {
+        return (Math.abs(getPosition().getX()-position.getX()) ==1 && (Math.abs(getPosition().getY()-position.getY()))==2)
+                ||(Math.abs(getPosition().getX()-position.getX())==2 && Math.abs(getPosition().getY()-position.getY())==1);
+    }
 }

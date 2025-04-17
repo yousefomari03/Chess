@@ -1,4 +1,19 @@
 package com.example.Chess.pieces;
 
-public class Rooks {
+import com.example.Chess.enums.Color;
+
+public class Rooks extends Piece {
+    public Rooks(Color color, Position position) {
+        super(color, position);
+    }
+    public Rooks(Position position) {
+        super(position);
+    }
+
+
+    @Override
+    public boolean canMove(Position position) {
+
+        return((getPosition().getX() ==position.getX()||getPosition().getY()==position.getY())&&!(getPosition().equals(position)));
+    }
 }
