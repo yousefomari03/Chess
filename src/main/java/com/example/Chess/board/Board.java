@@ -1,5 +1,6 @@
 package com.example.Chess.board;
 
+import com.example.Chess.pieces.Position;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,16 +18,12 @@ public class Board {
 
             }
 
-
         }
-
-
-
     }
 
-
-
-
+    public boolean isCellEmpty(Position position) {
+        return !this.getChessBoard()[position.getX()][position.getY()].getIsFilled();
+    }
 
 
 }
