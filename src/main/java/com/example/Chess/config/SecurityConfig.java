@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .cors((cors) -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowCredentials(true);
-                    config.addAllowedOrigin("http://localhost:5000/");
+                    config.addAllowedOrigin("http://localhost:5173/"); // TODO: change it to 5000
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
                     cors.configurationSource(request -> config);
@@ -48,9 +48,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/login")
-                )
+//                .oauth2Login(oauth2 -> oauth2
+//                        .loginPage("/login")
+//                )
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
                         .addLogoutHandler(logoutService)
