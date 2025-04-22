@@ -85,8 +85,12 @@ public abstract class Piece implements Move {
     public boolean canCapture(Position position, Board board) {
         Cell cell = board.getChessBoard()[position.getX()][position.getY()];
         if (cell.getPiece() != null){
-            return cell.getPiece().getColor() != this.getColor();
-            //TODO: handle capture;
+            if (cell.getPiece().getColor() != this.getColor()){
+                cell.setPiece(null);
+                cell.setIsFilled(false);
+                return true;
+            }
+            return false;
         }
 
         return false;
