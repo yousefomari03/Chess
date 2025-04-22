@@ -75,11 +75,7 @@ public abstract class Piece implements Move {
                 return false;
             }
         }
-        if (board.isCellEmpty(position)){
-            return true;
-        }
-
-        return canCapture(position, board);
+       return true;
     }
 
     public boolean canCapture(Position position, Board board) {
@@ -93,6 +89,18 @@ public abstract class Piece implements Move {
             return false;
         }
 
+        return false;
+    }
+    public boolean canStep(Position position, Board board) {
+        if (canPass(position, board)){
+            if (board.isCellEmpty(position)){
+                return true;
+            }
+
+            return canCapture(position, board);
+
+
+        }
         return false;
     }
 

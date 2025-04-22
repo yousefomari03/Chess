@@ -15,6 +15,6 @@ public class Bishop extends Piece {
     @Override
     public boolean canMove(Position position, Board board) {
         return checkBoarder(position, board) && Math.abs(getPosition().getX()-position.getX())==Math.abs(getPosition().getY()-position.getY())
-                && Math.abs(getPosition().getY()-position.getY())!=0 && canPass(position, board);
+                && Math.abs(getPosition().getY()-position.getY())!=0 && canStep(position, board);
     }
 }

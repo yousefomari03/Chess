@@ -16,6 +16,6 @@ public class Rook extends Piece {
     public boolean canMove(Position position, Board board) {
 
         return checkBoarder(position, board) && ((getPosition().getX() ==position.getX()||getPosition().getY()==position.getY())&&!(getPosition().equals(position)))
-               && canPass(position, board) ;
+               && canStep(position, board) ;
     }
 }
