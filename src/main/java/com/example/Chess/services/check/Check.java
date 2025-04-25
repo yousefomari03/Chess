@@ -25,12 +25,10 @@ public class Check {
         for(int i=0;i<8 ; i++){
             Position p=new Position(king.getPosition().getX()+x.get(i),king.getPosition().getY()+y.get(i));
 
-
             if(king.canMove(p,board) && !checkUnderAttack(pieces,p,board)){
                 return false;
 
             }
-
         }
         return true;
         //TODO:return positinos

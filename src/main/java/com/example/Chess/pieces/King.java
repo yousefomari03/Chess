@@ -17,7 +17,4 @@ public class King extends Piece {
         return (new Queen(this.getPosition()).canMove(position, board)) &&
                 Math.abs(position.getX() - this.getPosition().getX()) <= 1 && Math.abs(position.getY() - this.getPosition().getY()) <= 1;
     }
-
-    //TODO: check if the king under attack
-    //TODO: handle king castling
 }
