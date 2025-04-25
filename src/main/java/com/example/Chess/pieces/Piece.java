@@ -82,8 +82,8 @@ public abstract class Piece implements Move {
         Cell cell = board.getChessBoard()[position.getX()][position.getY()];
         if (cell.getPiece() != null){
             if (cell.getPiece().getColor() != this.getColor()){
-                cell.setPiece(null);
-                cell.setIsFilled(false);
+//                cell.setPiece(null);
+//                cell.setIsFilled(false);
                 return true;
             }
             return false;

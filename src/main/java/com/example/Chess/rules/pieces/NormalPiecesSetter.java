@@ -5,9 +5,14 @@ import com.example.Chess.board.Cell;
 import com.example.Chess.enums.Color;
 import com.example.Chess.pieces.*;
 
+import java.util.ArrayList;
+
 public class NormalPiecesSetter implements PiecesSetter {
+
     @Override
     public void setPiece(Board board) {
+        ArrayList<Piece> white;
+        ArrayList<Piece> black;
         for(int i = 0; i < 4; i++){
             board.getChessBoard()[i][1] = new Cell(true, new Pawn(Color.White, new Position(i, 1)));
             board.getChessBoard()[i][6] = new Cell(true, new Pawn(Color.Black, new Position(i, 6)));

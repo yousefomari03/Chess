@@ -2,6 +2,7 @@ package com.example.Chess.game;
 
 import com.example.Chess.board.Board;
 import com.example.Chess.model.Client;
+import com.example.Chess.pieces.Piece;
 import com.example.Chess.rules.pieces.PiecesSetter;
 
 import java.util.ArrayList;
@@ -10,6 +11,9 @@ public abstract class Game {
     public Board board;
     protected PiecesSetter piecesSetter;
     protected ArrayList<Client> players;
+    protected ArrayList<Piece> white;
+    protected ArrayList<Piece> black;
+
 
     public Game(ArrayList<Client> players){
         this.players = players;

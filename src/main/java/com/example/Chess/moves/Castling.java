@@ -6,7 +6,13 @@ import com.example.Chess.pieces.King;
 import com.example.Chess.pieces.Piece;
 import com.example.Chess.pieces.Position;
 import com.example.Chess.pieces.Rook;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
 public class Castling implements Move {
     private King king;
     public Castling(King King) {
