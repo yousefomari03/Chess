@@ -5,14 +5,20 @@ import com.example.Chess.board.Cell;
 import com.example.Chess.enums.Color;
 import com.example.Chess.moves.Move;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 
 public abstract class Piece implements Move {
+    private Long id;
     private Position position;
     private Color color;
     private boolean moved;
@@ -26,30 +32,28 @@ public abstract class Piece implements Move {
         this.moved=false;
     }
 
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
+    public Piece(Long id) {
+        this.id = id;
     }
 
 
-    public boolean isMoved() {
-        return moved;
-    }
+    public abstract List<Position> getValidMoves(Board board);
 
-    public void setMoved(boolean moved) {
-        this.moved = moved;
+    public List<Position> getPositionsWhileValid(Board board, List<Integer> x, List<Integer> y){
+        List<Position> validMoves = new ArrayList<>();
+
+
+        for(int i = 0; i < 4; i++){
+            Position position = new Position(this.getPosition().getX(), this.getPosition().getY());
+            while(position.getX()<board.getRow() && position.getY()<board.getCol()){
+                position.setX(position.getX() + x.get(i));
+                position.setY(position.getY() + y.get(i));
+                validMoves.add(position);
+            }
+        }
+
+        return validMoves;
+
     }
 
     public boolean checkBoarder(Position position, Board board) {

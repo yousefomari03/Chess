@@ -11,8 +11,6 @@ public class NormalPiecesSetter implements PiecesSetter {
 
     @Override
     public void setPiece(Board board) {
-        ArrayList<Piece> white;
-        ArrayList<Piece> black;
         for(int i = 0; i < 4; i++){
             board.getChessBoard()[i][1] = new Cell(true, new Pawn(Color.White, new Position(i, 1)));
             board.getChessBoard()[i][6] = new Cell(true, new Pawn(Color.Black, new Position(i, 6)));
@@ -38,7 +36,12 @@ public class NormalPiecesSetter implements PiecesSetter {
         board.getChessBoard()[3][0] = new Cell(true, new Queen(Color.White, new Position(3, 0)));
         board.getChessBoard()[3][7] = new Cell(true, new Queen(Color.Black, new Position(3, 7)));
 
-        board.getChessBoard()[4][0] = new Cell(true, new King(Color.White, new Position(4, 0)));
-        board.getChessBoard()[4][7] = new Cell(true, new King(Color.Black, new Position(4, 7)));
+        King whiteKing = new King(Color.White, new Position(4, 0));
+        board.getChessBoard()[4][0] = new Cell(true, whiteKing);
+        board.getPlayers().get(0).setKing(whiteKing);
+
+        King blackKing = new King(Color.Black, new Position(4, 7));
+        board.getChessBoard()[4][7] = new Cell(true, blackKing);
+        board.getPlayers().get(1).setKing(blackKing);
     }
 }

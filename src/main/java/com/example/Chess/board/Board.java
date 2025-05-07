@@ -1,9 +1,14 @@
 package com.example.Chess.board;
 
+import com.example.Chess.model.Client;
+import com.example.Chess.pieces.King;
 import com.example.Chess.pieces.Position;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,6 +17,8 @@ public class Board {
     private int row;
     private int col;
     Cell[][] chessBoard;
+    protected ArrayList<Client> players;
+    private int currentPlayer;
 
     public Board(int row, int col) {
         this.row = row;
