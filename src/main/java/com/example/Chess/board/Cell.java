@@ -19,9 +19,10 @@ public class Cell {
         this.isFilled = isFilled;
     }
 
-
-
-
+    public Cell(Boolean isFilled, Piece piece) {
+        this.isFilled = isFilled;
+        this.piece = piece;
+    }
 
 }
 

@@ -1,6 +1,8 @@
 package com.example.Chess.model;
 
 
+import com.example.Chess.enums.Color;
+import com.example.Chess.pieces.King;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,6 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Client implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +27,11 @@ public class Client implements UserDetails {
     @Column(unique = true)
     private String email;
     private String password;
+    private Color color;
+
+    @OneToOne(mappedBy = "client")
+    @JsonIgnore
+    private King king;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     @JsonIgnore
