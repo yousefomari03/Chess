@@ -2,9 +2,8 @@ package com.example.Chess.pieces;
 
 import com.example.Chess.board.Board;
 import com.example.Chess.enums.Color;
-import com.example.Chess.services.check.Check;
+import com.example.Chess.services.check.CheckService;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,18 +16,24 @@ public class Rook extends Piece {
     }
 
     @Override
+    public String getName() {
+        return "Rook";
+    }
+
+    @Override
+    public boolean canMove(Position position, Board board) {
+        return checkBoarder(position, board)
+                && (
+                        (((getPosition().getX() == position.getX()) || (getPosition().getY()==position.getY())) && !(getPosition().equals(position)))
+                        && canStep(position, board)
+                ) &&
+                CheckService.safeKing(this.getPosition(), position, board);
+    }
+
+    @Override
     public List<Position> getValidMoves(Board board) {
         List<Integer> x= Arrays.asList(1,-1,0,0);
         List<Integer> y= Arrays.asList(0,0,1,-1);
         return this.getPositionsWhileValid(board, x, y);
-    }
-
-
-    @Override
-    public boolean canMove(Position position, Board board) {
-
-        return (checkBoarder(position, board) && ((getPosition().getX() ==position.getX()||getPosition().getY()==position.getY())&&!(getPosition().equals(position)))
-               && canStep(position, board)) &&
-                Check.checkUnderAttack(position, board);
     }
 }

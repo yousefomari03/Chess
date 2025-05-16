@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .cors((cors) -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowCredentials(true);
-                    config.addAllowedOrigin("http://localhost:5173/"); // TODO: change it to 5000
+                    config.addAllowedOrigin("http://localhost:5173"); // TODO: change it to 5000
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
                     cors.configurationSource(request -> config);

@@ -2,7 +2,7 @@ package com.example.Chess.pieces;
 
 import com.example.Chess.board.Board;
 import com.example.Chess.enums.Color;
-import com.example.Chess.services.check.Check;
+import com.example.Chess.services.check.CheckService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,16 @@ public class Knight extends Piece{
     }
 
     @Override
+    public String getName() {
+        return "Knight";
+    }
+
+    @Override
     public boolean canMove(Position position, Board board) {
         return (checkBoarder(position, board) && (Math.abs(getPosition().getX()-position.getX()) ==1 && (Math.abs(getPosition().getY()-position.getY()))==2)
                 ||(Math.abs(getPosition().getX()-position.getX())==2 && Math.abs(getPosition().getY()-position.getY())==1)
                 && (canCapture(position, board) || board.isCellEmpty(position))) &&
-                Check.checkUnderAttack(position, board);
+                CheckService.safeKing(this.getPosition(), position, board);
     }
 
     @Override

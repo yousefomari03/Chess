@@ -1,7 +1,7 @@
 package com.example.Chess.moves;
 
 import com.example.Chess.board.Board;
-import com.example.Chess.board.Cell;
+import com.example.Chess.model.CastlingPositions;
 import com.example.Chess.pieces.King;
 import com.example.Chess.pieces.Piece;
 import com.example.Chess.pieces.Position;
@@ -21,36 +21,25 @@ public class Castling implements Move {
     @Override
 
     public boolean canMove(Position position, Board board) {
-        Piece rook = board.getChessBoard()[position.getX()][position.getY()].getPiece();
-        if(king.isMoved()||rook.isMoved()){
+        if (!isCastling(position, board)) {
             return false;
         }
-        if(!rook.canPass(king.getPosition(), board)){
-            return false;
 
-        }
-        //TODO:check is ander attack
-        return true;
+        Piece rook = board.getChessBoard()[position.getX()][position.getY()].getPiece();
+        return !king.isMoved() && !rook.isMoved() && rook.canPass(king.getPosition(), board);
     }
 
-    public void castle(King king,Rook rook, Board board) {
-        int n = rook.getPosition().getX()-king.getPosition().getX();
-        if(n<0){
-            n=-2;
-        }
-        else {
-            n = 2;
-        }
-        king.getPosition().setX(king.getPosition().getX()+n);
-        Cell cell = board.getChessBoard()[king.getPosition().getX()][king.getPosition().getY()];
-        cell.setPiece(king);
-        cell.setIsFilled(true);
-        king.setMoved(true);
+    public boolean isCastling(Position position, Board board) {
+        Piece piece = board.getChessBoard()[position.getX()][position.getY()].getPiece();
+        return piece instanceof Rook && king.getColor() == piece.getColor();
+    }
 
-        rook.getPosition().setX(king.getPosition().getX() + ((n > 0) ? -1 : 1));
-        cell = board.getChessBoard()[rook.getPosition().getX()][rook.getPosition().getY()];
-        cell.setPiece(rook);
-        cell.setIsFilled(true);
-        rook.setMoved(true);
+    public CastlingPositions getCastlingPositions(King king, Rook rook) {
+        int n = rook.getPosition().getX()-king.getPosition().getX();
+        n = n < 0 ? -2 : 2;
+
+        Position kingPosition = new Position(king.getPosition().getX() + n, king.getPosition().getY());
+        Position rookPosition = new Position(kingPosition.getX() + ((n > 0) ? -1 : 1), rook.getPosition().getY());
+        return new CastlingPositions(kingPosition, rookPosition);
     }
 }

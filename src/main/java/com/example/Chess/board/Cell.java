@@ -1,14 +1,17 @@
 package com.example.Chess.board;
 
 import com.example.Chess.pieces.Piece;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @ToString
-public class Cell {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Cell implements Serializable {
     private String name;
     private Boolean isFilled;
     private Piece piece;
@@ -20,6 +23,11 @@ public class Cell {
     }
 
     public Cell(Boolean isFilled, Piece piece) {
+        this.isFilled = isFilled;
+        this.piece = piece;
+    }
+
+    public void fillCell(Boolean isFilled, Piece piece){
         this.isFilled = isFilled;
         this.piece = piece;
     }
