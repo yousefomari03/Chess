@@ -14,6 +14,18 @@ public class Queen extends Piece {
     }
 
     @Override
+    public String getName() {
+        return "Queen";
+    }
+
+    @Override
+    public boolean canMove(Position position, Board board) {
+        return (
+                new Bishop(this.getColor(), this.getPosition()).canMove(position, board)
+               || new Rook(this.getColor(), this.getPosition()).canMove(position, board));
+    }
+
+    @Override
     public List<Position> getValidMoves(Board board) {
         Rook rook = new Rook(this.getColor(), this.getPosition());
         Bishop bishop = new Bishop(this.getColor(), this.getPosition());
@@ -21,10 +33,5 @@ public class Queen extends Piece {
         List<Position> validMoves = rook.getValidMoves(board);
         validMoves.addAll(bishop.getValidMoves(board));
         return validMoves;
-    }
-
-    @Override
-    public boolean canMove(Position position, Board board) {
-        return (new Bishop(this.getPosition()).canMove(position, board) || new Rook(this.getPosition()).canMove(position, board));
     }
 }

@@ -4,11 +4,13 @@ import com.example.Chess.board.Board;
 import com.example.Chess.board.Cell;
 import com.example.Chess.enums.Color;
 import com.example.Chess.moves.Move;
+import com.example.Chess.services.check.CheckService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,16 +19,19 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 
-public abstract class Piece implements Move {
+public abstract class Piece implements Move, Serializable {
     private Long id;
-    private Position position;
     private Color color;
     private boolean moved;
+    private Position position;
+    private CheckService checkService;
+
     public Piece(Color color, Position position) {
         this.color = color;
         this.position = position;
         this.moved= false;
     }
+
     public Piece(Position position) {
         this.position = position ;
         this.moved=false;
@@ -35,6 +40,8 @@ public abstract class Piece implements Move {
     public Piece(Long id) {
         this.id = id;
     }
+
+    public abstract String getName();
 
 
     public abstract List<Position> getValidMoves(Board board);
@@ -45,7 +52,7 @@ public abstract class Piece implements Move {
 
         for(int i = 0; i < 4; i++){
             Position position = new Position(this.getPosition().getX(), this.getPosition().getY());
-            while(position.getX()<board.getRow() && position.getY()<board.getCol()){
+            while((position.getX() >= 0 && position.getX()<board.getRow()) && (position.getY() >= 0 && position.getY()<board.getCol())){
                 position.setX(position.getX() + x.get(i));
                 position.setY(position.getY() + y.get(i));
                 validMoves.add(position);
@@ -57,7 +64,7 @@ public abstract class Piece implements Move {
     }
 
     public boolean checkBoarder(Position position, Board board) {
-        return position.getX() < board.getChessBoard().length && position.getY() < board.getChessBoard()[0].length;
+        return (position.getX() >= 0 && position.getX() < board.getRow()) && (position.getY() >= 0 && position.getY() < board.getCol());
     }
 
     public boolean canPass(Position position, Board board) {
@@ -74,12 +81,12 @@ public abstract class Piece implements Move {
         if (a2 != 0){
             a2 /= Math.abs(a2);
         }
-        for(int i = x + a1, j = y + a2; i != x1 && j != y1 ; i += a1, j += a2){
+        for(int i = x + a1, j = y + a2; i != x1 || j != y1 ; i += a1, j += a2){
             if (board.getChessBoard()[i][j].getIsFilled()){
                 return false;
             }
         }
-       return true;
+        return true;
     }
 
     public boolean canCapture(Position position, Board board) {

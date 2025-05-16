@@ -2,7 +2,7 @@ package com.example.Chess.pieces;
 
 import com.example.Chess.board.Board;
 import com.example.Chess.enums.Color;
-import com.example.Chess.services.check.Check;
+import com.example.Chess.services.check.CheckService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,18 +16,28 @@ public class Pawn extends Piece {
     public Pawn(Position position) {
         super(position);
     }
+
+    @Override
+    public String getName() {
+        return "Pawn";
+    }
+
     @Override
     public boolean canMove(Position position, Board board) {
-        return  (checkBoarder(position, board) && (position.getY() - this.getPosition().getY()) == 1 && (getPosition().getX()==position.getX())
-                || ((position.getY() - this.getPosition().getY()) == 2 && (getPosition().getX()==position.getX())&& !(this.isMoved()))
-                || (((position.getX() - this.getPosition().getX() == 1 && position.getY() - this.getPosition().getY() == 1) || (position.getX() - this.getPosition().getX() == -1 && position.getY() - this.getPosition().getY() == 1) ) && canCapture(position, board))) &&
-                Check.checkUnderAttack(position, board);
+        return  checkBoarder(position, board)
+                && (
+                   ((position.getY() - this.getPosition().getY()) == ((this.getColor() == Color.White) ? 1 : -1) && (getPosition().getX()==position.getX()) && !board.getChessBoard()[position.getX()][position.getY()].getIsFilled())
+                || ((position.getY() - this.getPosition().getY()) == ((this.getColor() == Color.White) ? 2 : -2) && (getPosition().getX()==position.getX()) && !(this.isMoved())) && !board.getChessBoard()[position.getX()][position.getY()].getIsFilled()
+                || (((position.getX() - this.getPosition().getX() == 1 && position.getY() - this.getPosition().getY() == (this.getColor() == Color.White ? 1 : -1)) || (position.getX() - this.getPosition().getX() == -1 && position.getY() - this.getPosition().getY() == (this.getColor() == Color.White ? 1 : -1)) ) && canCapture(position, board))
+                ) &&
+                CheckService.safeKing(this.getPosition(), position, board);
     }
 
     @Override
     public List<Position> getValidMoves(Board board) {
+        int checkBlack = this.getColor() == Color.Black ? -1 : 1;
         List<Integer> x = Arrays.asList(1, 0, -1, 0);
-        List<Integer> y = Arrays.asList(1, 1, 1, 2);
+        List<Integer> y = Arrays.asList(checkBlack, checkBlack, checkBlack, 2 * checkBlack);
         List<Position> validMoves = new ArrayList<>();
 
         for(int i = 0; i < 4; i++){
@@ -38,9 +48,17 @@ public class Pawn extends Piece {
     }
 
 
-    public boolean canPromote(Position position, Board board) {
-        return canMove(position, board) && ((this.getColor() == Color.White && position.getY() == 7)
-                || (this.getColor() == Color.Black && position.getY() == 0));
-        // TODO: Here or in the front-end, return the list of the pieces the pawn can promote
+    public Piece getPromotionPiece(String promotionPiece) {
+        if (promotionPiece.charAt(1) == 'Q'){
+            return new Queen(this.getColor(), this.getPosition());
+        } else if (promotionPiece.charAt(1) == 'N'){
+            return new Knight(this.getColor(), this.getPosition());
+        } else if (promotionPiece.charAt(1) == 'R'){
+            return new Rook(this.getColor(), this.getPosition());
+        } else if (promotionPiece.charAt(1) == 'B'){
+            return new Bishop(this.getColor(), this.getPosition());
+        } else {
+            throw new RuntimeException("Invalid piece");
+        }
     }
 }

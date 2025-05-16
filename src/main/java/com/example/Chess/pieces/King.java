@@ -24,6 +24,11 @@ public class King extends Piece {
         super(position);
     }
 
+    @Override
+    public String getName() {
+        return "King";
+    }
+
     public King() {
         super();
     }
@@ -33,10 +38,9 @@ public class King extends Piece {
         return List.of();
     }
 
-
     @Override
     public boolean canMove(Position position, Board board) {
-        return (new Queen(this.getPosition()).canMove(position, board)) &&
+        return (new Queen(this.getColor(), this.getPosition()).canMove(position, board)) &&
                 Math.abs(position.getX() - this.getPosition().getX()) <= 1 && Math.abs(position.getY() - this.getPosition().getY()) <= 1;
     }
 }

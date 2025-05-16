@@ -21,7 +21,7 @@ public class ClientController {
     }
 
     @GetMapping("/get-editor-by-data/{email}")
-    public ResponseEntity<?> getEditorByEmail(@PathVariable String email){
+    public ResponseEntity<?> getClientByEmail(@PathVariable String email){
         if (clientService.existsClientByEmail(email)){
             return ResponseEntity.ok(clientService.getClientByEmail(email));
         } else {
