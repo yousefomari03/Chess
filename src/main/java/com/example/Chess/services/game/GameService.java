@@ -66,10 +66,10 @@ public class GameService {
     }
 
     public ResponseEntity<?> fetchGame(String id) {
+        System.out.println("hhhhhhhhhhhhhhhere!!!!!!!!!!!11");
         Game game = (Game) fileSystemUtil.readObjectFromFile(id);
         if (game == null) {
-            System.out.println("Error: Game not found");
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.badRequest().body("Error: Game not found");
         }
         return ResponseEntity.ok(getGameStatus(game));
     }
@@ -121,7 +121,7 @@ public class GameService {
                                         .name(player1.getName())
                                         .email(player1.getEmail())
                                         .id(player1.getId())
-                                        .turn(0)
+                                        .turn(1)
                                         .build()
                         ).reason("Time out")
                         .build();
@@ -146,6 +146,7 @@ public class GameService {
 
     public GameStatusDTO getGameStatus(Game game){
         GameOverDTO gameOver = checkGameOver(game);
+        System.out.println(gameOver);
         return GameStatusDTO.builder()
                 .fen(game.getBoard().getFen())
                 .gameOver(gameOver.isOver())
@@ -161,10 +162,11 @@ public class GameService {
 
     private int calculateRemainingTime(Game game, int player){
         Board board = game.getBoard();
-        int diffTime = Math.max((int) (System.currentTimeMillis() - board.getPlayerLastMoveTimes().get((player + 1) % 2)), 0);
+        int diffTime = (int) Math.max((System.currentTimeMillis() - board.getPlayerLastMoveTimes().get((player + 1) % 2)), 0L);
         if (diffTime != 0) {
             diffTime /= 1000;
         }
+
         return Math.max(board.getSecondsPerSide() - board.getPlayerPassedTime().get(player) - diffTime, 0);
     }
 }

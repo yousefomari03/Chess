@@ -3,6 +3,7 @@ package com.example.Chess.services;
 import com.example.Chess.dto.AuthenticationDTO;
 import com.example.Chess.dto.RegisterDTO;
 import com.example.Chess.model.Client;
+import com.example.Chess.model.TempRegisterStorage;
 import com.example.Chess.model.Token;
 import com.example.Chess.repository.ClientRepository;
 import com.example.Chess.repository.TokenRepository;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -42,18 +45,46 @@ public class AuthenticationService {
     @Autowired
     private TokenRepository tokenRepository;
 
-    public AuthenticationResponse register(RegisterDTO request) {
+    @Autowired
+    private EmailService emailService;
+
+    public String verifyWithEmail(RegisterDTO request) {
+        if (clientRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already registered");
+        }
+
+        String token = UUID.randomUUID().toString();
+
+        TempRegisterStorage.registerStorage.put(token, request);
+
+        emailService.sendVerificationEmail(request.getEmail(), token);
+
+        return token;
+    }
+
+    public ResponseEntity<AuthenticationResponse> register(String token){
+        RegisterDTO data = TempRegisterStorage.registerStorage.get(token);
+        if (data == null) {
+            throw new RuntimeException("Expired token");
+        }
+
+        return register(TempRegisterStorage.registerStorage.get(token));
+    }
+    public ResponseEntity<AuthenticationResponse> register(RegisterDTO request) {
         Client client = Client
                 .builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
+        if (clientRepository.findByEmail(request.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
         Client savedClient = clientRepository.save(client);
         String accessToken = jwtService.generateAccessToken(client);
         String refreshToken = jwtService.generateRefreshToken(client);
         saveClientToken(savedClient, accessToken);
-        return new AuthenticationResponse(accessToken, refreshToken, client);
+        return ResponseEntity.ok(new AuthenticationResponse(accessToken, refreshToken, client));
     }
 
     private void saveClientToken(Client client, String jwtToken) {
@@ -112,5 +143,17 @@ public class AuthenticationService {
         }
 
         return null;
+    }
+
+    public ResponseEntity<?> checkVerified(String token) {
+        if(TempRegisterStorage.registerStorage.containsKey(token)){
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    public void verifiedEmail(String token) {
+        TempRegisterStorage.registerStorage.remove(token);
     }
 }

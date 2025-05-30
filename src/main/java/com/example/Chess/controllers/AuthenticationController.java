@@ -19,9 +19,25 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @PostMapping("/send-email")
+    public String sendEmail(@RequestBody RegisterDTO request) {
+        return authenticationService.verifyWithEmail(request);
+    }
+
+    @PostMapping("/verify/{token}")
+    public ResponseEntity<?> verify(@PathVariable String token) {
+        return authenticationService.checkVerified(token);
+    }
+
+    @GetMapping("/verified/{token}")
+    public String verified(@PathVariable String token) {
+        authenticationService.verifiedEmail(token);
+        return "Verified successfully";
+    }
+
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterDTO request) {
-        return ResponseEntity.ok(authenticationService.register(request));
+        return authenticationService.register(request);
     }
 
     @PostMapping("/authenticate")
