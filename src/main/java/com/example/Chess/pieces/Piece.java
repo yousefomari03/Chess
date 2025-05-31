@@ -52,7 +52,7 @@ public abstract class Piece implements Move, Serializable {
 
         for(int i = 0; i < 4; i++){
             Position position = new Position(this.getPosition().getX(), this.getPosition().getY());
-            while((position.getX() >= 0 && position.getX()<board.getRow()) && (position.getY() >= 0 && position.getY()<board.getCol())){
+            while((position.getX() + x.get(i) >= 0 && position.getX() + x.get(i) < board.getRow()) && (position.getY() + y.get(i) >= 0 && position.getY() + y.get(i) <board.getCol())){
                 position.setX(position.getX() + x.get(i));
                 position.setY(position.getY() + y.get(i));
                 validMoves.add(position);
@@ -92,9 +92,7 @@ public abstract class Piece implements Move, Serializable {
     public boolean canCapture(Position position, Board board) {
         Cell cell = board.getChessBoard()[position.getX()][position.getY()];
         if (cell.getPiece() != null){
-            if (cell.getPiece().getColor() != this.getColor()){
-//                cell.setPiece(null);
-//                cell.setIsFilled(false);
+            if (cell.getPiece().getColor() != this.getColor()){ // TODO: check if the distination is not king
                 return true;
             }
             return false;

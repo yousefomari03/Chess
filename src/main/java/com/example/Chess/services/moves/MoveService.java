@@ -6,6 +6,7 @@ import com.example.Chess.game.Game;
 import com.example.Chess.model.CastlingPositions;
 import com.example.Chess.moves.Castling;
 import com.example.Chess.pieces.*;
+import com.example.Chess.services.StockfishService;
 import com.example.Chess.services.board.BoardService;
 import com.example.Chess.services.game.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class MoveService {
     private BoardService boardService;
     @Autowired
     private GameService gameService;
+
+    @Autowired
+    private StockfishService stockfishService;
 
     public Position getPositionFromMove(String move){
         int x = move.charAt(0) - 'a';
@@ -98,21 +102,29 @@ public class MoveService {
         return piece.canMove(position, board);
     }
 
-    public ResponseEntity<?> promote(String from, String to, String promotionPiece, Game game) {
+    public ResponseEntity<?> checkThenPromote(String from, String to, String promotionPiece, Game game) {
         Board board = game.getBoard();
         Position position = getPositionFromMove(from);
         Cell cell = boardService.getCellFromPosition(position, board);
         Pawn pawn = (Pawn) cell.getPiece();
         if (pawn.canMove(getPositionFromMove(to), board)){
-            Piece piece = pawn.getPromotionPiece(promotionPiece);
-            cell.setPiece(piece);
-            ArrayList<String> froms = new ArrayList<>(), tos = new ArrayList<>();
-            froms.add(from);
-            tos.add(to);
-            apply(froms, tos, game);
-            return ResponseEntity.status(HttpStatus.OK).body(gameService.getGameStatus(game));
+            return promote(from, to, promotionPiece, game);
         }
         return ResponseEntity.badRequest().body(gameService.getGameStatus(game));
+    }
+
+    public ResponseEntity<?> promote(String from, String to, String promotionPiece, Game game) {
+        Board board = game.getBoard();
+        Position position = getPositionFromMove(from);
+        Cell cell = boardService.getCellFromPosition(position, board);
+        Pawn pawn = (Pawn) cell.getPiece();
+        Piece piece = pawn.getPromotionPiece(promotionPiece.toUpperCase().charAt(0));
+        cell.setPiece(piece);
+        ArrayList<String> froms = new ArrayList<>(), tos = new ArrayList<>();
+        froms.add(from);
+        tos.add(to);
+        apply(froms, tos, game);
+        return ResponseEntity.status(HttpStatus.OK).body(gameService.getGameStatus(game));
     }
 
     public boolean checkCastlingWithApply(String from, String to, Game game) {
@@ -139,8 +151,24 @@ public class MoveService {
         return false;
     }
 
-
     private boolean kingOnCell(String to, Game game) {
         return boardService.getCellFromPosition(getPositionFromMove(to), game.getBoard()).getPiece() instanceof King;
+    }
+
+    public ResponseEntity<?> applyForBot(Game game) {
+        ArrayList<String> froms = new ArrayList<>(), tos = new ArrayList<>();
+
+        String best = stockfishService.getBestMove(game.getBoard().getFen(), 10);
+        String fromBot = "" + best.charAt(0) + best.charAt(1);
+        String toBot = "" + best.charAt(2) + best.charAt(3);
+        if (best.length() == 5){
+            String promotion = best.charAt(4) + "";
+            return promote(fromBot, toBot, promotion, game);
+        } else {
+            froms.add(fromBot);
+            tos.add(toBot);
+            apply(froms, tos, game);
+            return ResponseEntity.ok(gameService.getGameStatus(game));
+        }
     }
 }

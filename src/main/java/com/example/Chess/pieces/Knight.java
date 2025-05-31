@@ -23,10 +23,16 @@ public class Knight extends Piece{
 
     @Override
     public boolean canMove(Position position, Board board) {
-        return (checkBoarder(position, board) && (Math.abs(getPosition().getX()-position.getX()) ==1 && (Math.abs(getPosition().getY()-position.getY()))==2)
-                ||(Math.abs(getPosition().getX()-position.getX())==2 && Math.abs(getPosition().getY()-position.getY())==1)
-                && (canCapture(position, board) || board.isCellEmpty(position))) &&
-                CheckService.safeKing(this.getPosition(), position, board);
+        return (checkBoarder(position, board) &&
+                (
+                    (
+                            (Math.abs(getPosition().getX()-position.getX()) ==1 && (Math.abs(getPosition().getY()-position.getY()))==2)
+                            || (Math.abs(getPosition().getX()-position.getX())==2 && Math.abs(getPosition().getY()-position.getY())==1)
+                    )
+                    && (canCapture(position, board) || board.isCellEmpty(position))
+                )
+                && CheckService.safeKing(this.getPosition(), position, board)
+        );
     }
 
     @Override
@@ -36,11 +42,15 @@ public class Knight extends Piece{
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 2; j++){
                 for(int k = 0; k < 2; k++){
-                    Position position = new Position(coordinates.get(i).get(j), coordinates.get((i + 1) % 2).get(k));
+                    Position position = new Position(
+                            this.getPosition().getX() + coordinates.get(i).get(j),
+                            this.getPosition().getY() + coordinates.get((i + 1) % 2).get(k));
                     validMoves.add(position);
                 }
             }
         }
+
+        System.out.println("The length of the valid moves: " + validMoves.size());
 
         return validMoves;
     }

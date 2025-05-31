@@ -48,14 +48,14 @@ public class Pawn extends Piece {
     }
 
 
-    public Piece getPromotionPiece(String promotionPiece) {
-        if (promotionPiece.charAt(1) == 'Q'){
+    public Piece getPromotionPiece(char promotionPiece) {
+        if (promotionPiece == 'Q'){
             return new Queen(this.getColor(), this.getPosition());
-        } else if (promotionPiece.charAt(1) == 'N'){
+        } else if (promotionPiece == 'N'){
             return new Knight(this.getColor(), this.getPosition());
-        } else if (promotionPiece.charAt(1) == 'R'){
+        } else if (promotionPiece == 'R'){
             return new Rook(this.getColor(), this.getPosition());
-        } else if (promotionPiece.charAt(1) == 'B'){
+        } else if (promotionPiece == 'B'){
             return new Bishop(this.getColor(), this.getPosition());
         } else {
             throw new RuntimeException("Invalid piece");

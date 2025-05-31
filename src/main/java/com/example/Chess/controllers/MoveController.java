@@ -21,6 +21,12 @@ public class MoveController {
         return moveService.applyWithValidation(from , to, game);
     }
 
+    @PostMapping("/bot/apply/{gameId}")
+    public ResponseEntity<?> applyWithValidationBot(@PathVariable String gameId) {
+        Game game = gameService.getGame(gameId);
+        return moveService.applyForBot(game);
+    }
+
     @GetMapping("/validate/{from}/{to}/{gameId}")
     public boolean validate(@PathVariable String from, @PathVariable String to, @PathVariable String gameId) {
         Game game = gameService.getGame(gameId);
@@ -30,6 +36,6 @@ public class MoveController {
     @PostMapping("/promote/{from}/{to}/{promotionPiece}/{gameId}")
     public ResponseEntity<?> promote(@PathVariable String from, @PathVariable String to, @PathVariable String promotionPiece, @PathVariable String gameId) {
         Game game = gameService.getGame(gameId);
-        return moveService.promote(from, to, promotionPiece, game);
+        return moveService.promote(from, to, promotionPiece.charAt(0) + "", game);
     }
 }

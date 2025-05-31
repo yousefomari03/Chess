@@ -9,6 +9,7 @@ import com.example.Chess.game.NormalGame;
 import com.example.Chess.model.Client;
 import com.example.Chess.pieces.King;
 import com.example.Chess.pieces.Piece;
+import com.example.Chess.services.ClientService;
 import com.example.Chess.services.PiecesService;
 import com.example.Chess.services.check.CheckService;
 import com.example.Chess.utils.FileSystemUtil;
@@ -26,6 +27,9 @@ public class GameService {
     @Autowired
     private FileSystemUtil fileSystemUtil;
 
+    @Autowired
+    private ClientService clientService;
+
     public GameStatusDTO gameInit(Client client, String gameId, Map<String, String> times){
         ArrayList<Client> clients = new ArrayList<>();
         clients.add(client);
@@ -37,6 +41,19 @@ public class GameService {
         return getGameStatus(game);
     }
 
+    public GameStatusDTO gameBotInit(Client client, String gameId, Map<String, String> times){
+        ArrayList<Client> clients = new ArrayList<>();
+        Client bot = clientService.getClientByEmail("chessBotChecks@gmail.com");
+        clients.add(client);
+        clients.add(bot);
+        Game game = new NormalGame(clients, gameId);
+        game.prepare();
+        System.out.println(game.getBoard().getFen());
+        game.getBoard().setSecondsPerSide(Integer.MAX_VALUE);
+        saveGame(game);
+        return getGameStatus(game);
+    }
+
     public void joinPlayer(String gameId, Client client) {
         Game game = (Game) fileSystemUtil.readObjectFromFile(gameId);
         if (game == null) {
@@ -44,6 +61,7 @@ public class GameService {
         }
         game.getBoard().getPlayers().add(client);
         game.prepare();
+        System.out.println(game.getBoard().getFen());
         saveGame(game);
     }
 
@@ -66,7 +84,6 @@ public class GameService {
     }
 
     public ResponseEntity<?> fetchGame(String id) {
-        System.out.println("hhhhhhhhhhhhhhhere!!!!!!!!!!!11");
         Game game = (Game) fileSystemUtil.readObjectFromFile(id);
         if (game == null) {
             return ResponseEntity.badRequest().body("Error: Game not found");
@@ -146,7 +163,6 @@ public class GameService {
 
     public GameStatusDTO getGameStatus(Game game){
         GameOverDTO gameOver = checkGameOver(game);
-        System.out.println(gameOver);
         return GameStatusDTO.builder()
                 .fen(game.getBoard().getFen())
                 .gameOver(gameOver.isOver())

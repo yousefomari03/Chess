@@ -15,9 +15,7 @@ import java.util.List;
 
 public class CheckService {
     public static boolean kingUnderAttack(ArrayList<Piece> oppPieces, Position position, Board board){
-        System.out.println("Checking " + oppPieces.get(0).getColor() + " pieces if they can attack");
         for (Piece piece: oppPieces){
-            System.out.println("if piece can attack: " + piece.getColor() + " " + piece.getName());
             if (piece.canMove(position,board)){
                 return true;
             }
@@ -45,7 +43,6 @@ public class CheckService {
         Cell srcCell = board.getChessBoard()[src.getX()][src.getY()];
         Piece srcPiece = srcCell.getPiece();
         int currentPlayer = (srcPiece.getColor() == Color.White) ? 0 : 1;
-        System.out.println("Checking safe king for " + srcPiece.getColor() + " after moving the " + srcPiece.getColor() + " " + srcPiece.getName());
 
         srcCell.setPiece(null);
         srcCell.setIsFilled(false);
@@ -73,11 +70,11 @@ public class CheckService {
 
     public static boolean canProtect(ArrayList<Piece> pieces, Board board){
         for(Piece piece: pieces){
-            System.out.println(piece.getColor() + " " + piece.getName());
+            System.out.println(piece.getColor() + " " + piece.getName() + " " + piece.getPosition());
             List<Position> positions = piece.getValidMoves(board);
             for(Position position: positions){
+                System.out.println("Can move to " + position);
                 if (piece.canMove(position,board)){
-                    System.out.println("The piece: " + piece.getColor().toString() + " " + piece.getName() + " can protect");
                     return true;
                 }
             }

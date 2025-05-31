@@ -53,4 +53,11 @@ public class GameController {
         Game game = gameService.getGame(id);
         return ResponseEntity.ok(gameService.getGameStatus(game));
     }
+
+    @PostMapping("/create/bot/{gameId}")
+    public GameStatusDTO createBotGame(@RequestHeader("Authorization") String token, @PathVariable String gameId, @RequestBody Map<String, String> times) {
+        String senderEmail = jwtService.extractUsername(token.replace("Bearer ", ""));
+        Client client = clientService.getClientByEmail(senderEmail);
+        return gameService.gameBotInit(client, gameId, times);
+    }
 }
