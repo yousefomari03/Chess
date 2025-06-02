@@ -4,7 +4,6 @@ import com.example.Chess.board.Board;
 import com.example.Chess.board.Cell;
 import com.example.Chess.enums.Color;
 import com.example.Chess.moves.Move;
-import com.example.Chess.services.check.CheckService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +23,6 @@ public abstract class Piece implements Move, Serializable {
     private Color color;
     private boolean moved;
     private Position position;
-    private CheckService checkService;
 
     public Piece(Color color, Position position) {
         this.color = color;

@@ -1,8 +1,9 @@
 package com.example.Chess.services;
 
 import com.example.Chess.board.Board;
+import com.example.Chess.enums.Color;
 import com.example.Chess.model.Client;
-import com.example.Chess.pieces.Piece;
+import com.example.Chess.pieces.*;
 
 import java.util.ArrayList;
 
@@ -22,5 +23,28 @@ public class PiecesService {
         }
 
         return pieces;
+    }
+
+    public static Piece getPieceFromChar(char pieceChar, Position position){
+        char ch = Character.toLowerCase(pieceChar);
+        Piece piece;
+        Color color = Character.isLowerCase(pieceChar) ? Color.Black : Color.White;
+        if (ch == 'p'){
+            piece = new Pawn(color, position);
+        } else if (ch == 'b'){
+            piece = new Bishop(color, position);
+        } else if (ch == 'n'){
+            piece = new Knight(color, position);
+        } else if (ch == 'r'){
+            piece = new Rook(color, position);
+        } else if (ch == 'k'){
+            piece = new King(color, position);
+        } else if (ch == 'q'){
+            piece = new Queen(color, position);
+        } else {
+            throw new RuntimeException("Invalid piece character");
+        }
+
+        return piece;
     }
 }

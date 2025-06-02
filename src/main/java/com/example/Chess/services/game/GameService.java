@@ -4,14 +4,20 @@ import com.example.Chess.board.Board;
 import com.example.Chess.dto.ClientDTO;
 import com.example.Chess.dto.GameOverDTO;
 import com.example.Chess.dto.GameStatusDTO;
+import com.example.Chess.enums.Color;
 import com.example.Chess.game.Game;
 import com.example.Chess.game.NormalGame;
+import com.example.Chess.game.PuzzleGame;
 import com.example.Chess.model.Client;
+import com.example.Chess.model.Puzzle;
 import com.example.Chess.pieces.King;
 import com.example.Chess.pieces.Piece;
+import com.example.Chess.pieces.Position;
 import com.example.Chess.services.ClientService;
 import com.example.Chess.services.PiecesService;
+import com.example.Chess.services.PuzzleService;
 import com.example.Chess.services.check.CheckService;
+import com.example.Chess.services.moves.MoveService;
 import com.example.Chess.utils.FileSystemUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -184,5 +190,16 @@ public class GameService {
         }
 
         return Math.max(board.getSecondsPerSide() - board.getPlayerPassedTime().get(player) - diffTime, 0);
+    }
+
+    public void puzzleGameInit(Client client, Puzzle puzzle) {
+        ArrayList<Client> clients = new ArrayList<>();
+        Client bot = clientService.getClientByEmail("chessBotChecks@gmail.com");
+        clients.add(client);
+        clients.add(bot);
+        Game game = new PuzzleGame(clients, puzzle.getId(), puzzle.getFen());
+        game.prepare();
+
+        saveGame(game);
     }
 }

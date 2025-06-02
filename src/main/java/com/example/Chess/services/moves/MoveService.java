@@ -2,8 +2,10 @@ package com.example.Chess.services.moves;
 
 import com.example.Chess.board.Board;
 import com.example.Chess.board.Cell;
+import com.example.Chess.dto.GameStatusDTO;
 import com.example.Chess.game.Game;
 import com.example.Chess.model.CastlingPositions;
+import com.example.Chess.model.Puzzle;
 import com.example.Chess.moves.Castling;
 import com.example.Chess.pieces.*;
 import com.example.Chess.services.StockfishService;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MoveService {
@@ -170,5 +173,39 @@ public class MoveService {
             apply(froms, tos, game);
             return ResponseEntity.ok(gameService.getGameStatus(game));
         }
+    }
+
+    public ResponseEntity<?> applyPuzzleWithValidation(String from, String to, Game game, Puzzle puzzle) {
+        List<String> solution = puzzle.getSolutionMoves();
+        String move = from + to;
+        System.out.println(solution.get(puzzle.getCurrentMove()));
+        System.out.println(move);
+        if (!move.equals(solution.get(puzzle.getCurrentMove()))){
+            return ResponseEntity.badRequest().body("That's not the move");
+        }
+        applyWithValidation(from, to, game);
+        puzzle.setCurrentMove(puzzle.getCurrentMove() + 1);
+        GameStatusDTO status = gameService.getGameStatus(game);
+        status.setPuzzle(puzzle);
+        return ResponseEntity.ok(status);
+    }
+
+    public ResponseEntity<?> playNextMovePuzzle(Game game, Puzzle puzzle) {
+        if (puzzle.getCurrentMove() == puzzle.getSolutionMoves().size()){
+            GameStatusDTO status = gameService.getGameStatus(game);
+            status.setGameOver(true);
+            status.setGameOverReason("Solved");
+            return ResponseEntity.ok(status);
+        }
+
+        String move = puzzle.getSolutionMoves().get(puzzle.getCurrentMove());
+        String from = "" + move.charAt(0) + move.charAt(1);
+        String to = "" + move.charAt(2) + move.charAt(3);
+
+        applyWithValidation(from, to, game);
+        puzzle.setCurrentMove(puzzle.getCurrentMove() + 1);
+        GameStatusDTO status = gameService.getGameStatus(game);
+        status.setPuzzle(puzzle);
+        return ResponseEntity.ok(status);
     }
 }

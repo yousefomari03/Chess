@@ -1,6 +1,7 @@
 package com.example.Chess.controllers;
 
 import com.example.Chess.game.Game;
+import com.example.Chess.model.Puzzle;
 import com.example.Chess.services.game.GameService;
 import com.example.Chess.services.moves.MoveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +38,17 @@ public class MoveController {
     public ResponseEntity<?> promote(@PathVariable String from, @PathVariable String to, @PathVariable String promotionPiece, @PathVariable String gameId) {
         Game game = gameService.getGame(gameId);
         return moveService.promote(from, to, promotionPiece.charAt(0) + "", game);
+    }
+
+    @PostMapping("/apply/puzzle/{from}/{to}/{gameId}")
+    public ResponseEntity<?> applyPuzzleWithValidation(@PathVariable String from, @PathVariable String to, @PathVariable String gameId, @RequestBody Puzzle puzzle) {
+        Game game = gameService.getGame(gameId);
+        return moveService.applyPuzzleWithValidation(from , to, game, puzzle);
+    }
+
+    @PostMapping("/play-next/puzzle/{gameId}")
+    public ResponseEntity<?> playNextPuzzle(@PathVariable String gameId, @RequestBody Puzzle puzzle) {
+        Game game = gameService.getGame(gameId);
+        return moveService.playNextMovePuzzle(game, puzzle);
     }
 }

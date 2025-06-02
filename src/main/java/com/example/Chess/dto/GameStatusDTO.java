@@ -1,5 +1,6 @@
 package com.example.Chess.dto;
 
+import com.example.Chess.model.Puzzle;
 import lombok.*;
 
 @Getter
@@ -20,4 +21,5 @@ public class GameStatusDTO {
     private int increments;
     private boolean started;
     private String gameOverReason;
+    private Puzzle puzzle;
 }
